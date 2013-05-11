@@ -6,6 +6,7 @@ Description: Provides a "view all" (single page) option for posts, pages, and cu
 Author: Erick Hitter & Oomph, Inc.
 Version: 0.7
 Author URI: http://www.thinkoomph.com/
+Text Domain: view_all_posts_pages
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
