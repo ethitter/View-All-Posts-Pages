@@ -107,11 +107,12 @@ class view_all_posts_pages {
 	 * Determine if full post view is being requested.
 	 *
 	 * @global $wp_query
+	 * @uses is_404
 	 * @return bool
 	 */
 	public function is_view_all() {
 		global $wp_query;
-		return is_array( $wp_query->query ) && array_key_exists( $this->query_var, $wp_query->query );
+		return is_array( $wp_query->query ) && array_key_exists( $this->query_var, $wp_query->query ) && ! is_404();
 	}
 
 	/**
