@@ -4,7 +4,7 @@ Plugin Name: View All Post's Pages
 Plugin URI: http://www.thinkoomph.com/plugins-modules/view-all-posts-pages/
 Description: Provides a "view all" (single page) option for posts, pages, and custom post types paged using WordPress' <a href="http://codex.wordpress.org/Write_Post_SubPanel#Quicktags" target="_blank"><code>&lt;!--nextpage--&gt;</code> Quicktag</a> (multipage posts).
 Author: Erick Hitter & Oomph, Inc.
-Version: 0.6.1
+Version: 0.7
 Author URI: http://www.thinkoomph.com/
 
 This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 class view_all_posts_pages {
+	/**
+	 * Singleton
+	 */
+	private static $__instance = null;
+
+	/**
+	 * Class variables
+	 */
 	private $query_var = 'view-all';
 
 	private $ns = 'view_all_posts_pages';
@@ -48,12 +56,33 @@ class view_all_posts_pages {
 	private $notice_key = 'vapp_admin_notice_dismissed';
 
 	/**
+	 * Silence is golden
+	 */
+	private function __construct() {}
+
+	/**
+	 * Implement singleton
+	 *
+	 * @uses self::setup
+	 * @return self
+	 */
+	public static function get_instance() {
+		if ( ! is_a( self::$__instance, __CLASS__ ) ) {
+			self::$__instance = new self;
+
+			self::$__instance->setup();
+		}
+
+		return self::$__instance;
+	}
+
+	/**
 	 * Register actions and filters.
 	 *
 	 * @uses register_deactivation_hook, add_action, add_filter, this::get_options, apply_filters, get_option
 	 * @return null
 	 */
-	public function __construct() {
+	private function setup() {
 		register_deactivation_hook( __FILE__, array( $this, 'deactivation_hook' ) );
 
 		add_action( 'admin_init', array( $this, 'action_admin_init' ) );
@@ -603,23 +632,22 @@ class view_all_posts_pages {
 		endif;
 	}
 }
-global $vapp;
-if ( ! is_a( $vapp, 'view_all_posts_pages' ) )
-	$vapp = new view_all_posts_pages;
+view_all_posts_pages::get_instance();
+
+/**
+ * Alias global variable used to hold instantiated plugin prior to singleton's introduction in version 0.7.
+ */
+$GLOBALS['vapp'] = view_all_posts_pages::get_instance();
 
 /**
  * Shortcut to public function for generating full post view URL
  *
  * @param int $post_id
- * @uses $vapp
+ * @uses view_all_posts_pages::get_instance
  * @return string or bool
  */
 function vapp_get_url( $post_id = false ) {
-	global $vapp;
-	if ( ! is_a( $vapp, 'view_all_posts_pages' ) )
-		$vapp = new view_all_posts_pages;
-
-	return $vapp->url( intval( $post_id ) );
+	return view_all_posts_pages::get_instance()->url( intval( $post_id ) );
 }
 
 /**
@@ -645,30 +673,22 @@ function vapp_the_link( $link_text = 'View All', $class = 'vapp' ) {
  * Function is a shortcut to class' filter.
  *
  * @param array $args
- * @uses $vapp
+ * @uses view_all_posts_pages::get_instance
  * @return array
  */
 function vapp_filter_wp_link_pages_args( $args ) {
-	global $vapp;
-	if ( ! is_a( $vapp, 'view_all_posts_pages' ) )
-		$vapp = new view_all_posts_pages;
-
-	return $vapp->filter_wp_link_pages_args( $args );
+	return view_all_posts_pages::get_instance()->filter_wp_link_pages_args( $args );
 }
 
 if ( ! function_exists( 'is_view_all' ) ) {
 	/**
 	 * Conditional tag indicating if full post view was requested.
 	 *
-	 * @uses $vapp
+	 * @uses view_all_posts_pages::get_instance
 	 * @return bool
 	 */
 	function is_view_all() {
-		global $vapp;
-		if ( ! is_a( $vapp, 'view_all_posts_pages' ) )
-			$vapp = new view_all_posts_pages;
-
-		return $vapp->is_view_all();
+		return view_all_posts_pages::get_instance()->is_view_all();
 	}
 }
 ?>
