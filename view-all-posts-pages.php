@@ -65,7 +65,12 @@ class view_all_posts_pages {
 	/**
 	 * Register actions and filters.
 	 *
-	 * @uses register_deactivation_hook, add_action, add_filter, this::get_options, apply_filters, get_option
+	 * @uses register_deactivation_hook
+	 * @uses add_action
+	 * @uses add_filter
+	 * @uses this::get_options
+	 * @uses apply_filters
+	 * @uses get_option
 	 * @return null
 	 */
 	private function setup() {
@@ -94,7 +99,8 @@ class view_all_posts_pages {
 	/**
 	 * Clean up after plugin deactivation.
 	 *
-	 * @uses flush_rewrite_rules, delete_option
+	 * @uses flush_rewrite_rules
+	 * @uses delete_option
 	 * @action register_deactivation_hook
 	 * @return null
 	 */
@@ -107,7 +113,9 @@ class view_all_posts_pages {
 
 	/**
 	 * Register plugin option and disable rewrite rule flush warning.
-	 * @uses register_setting, apply_filters, update_option
+	 * @uses register_setting
+	 * @uses apply_filters
+	 * @uses update_option
 	 * @action admin_init
 	 * @return null
 	 */
@@ -233,8 +241,11 @@ class view_all_posts_pages {
 	 * Add wp_link_pages arguments filter if automatic inclusion is chosen for a given post type.
 	 * Automatic inclusion can be disabled by passing false through the vapp_display_link filter.
 	 *
+	 * @global $post
 	 * @param array $args
-	 * @uses $post, this::get_options, apply_filters, add_filter
+	 * @uses this::get_options
+	 * @uses apply_filters
+	 * @uses add_filter
 	 * @filter wp_link_pages
 	 * @return array
 	 */
@@ -252,8 +263,12 @@ class view_all_posts_pages {
 	/**
 	 * Filter wp_link_pages arguments to append "View all" link to output.
 	 *
+	 * @global $more
 	 * @param array $args
-	 * @uses this::get_options, $more, this::is_view_all, esc_attr, esc_url
+	 * @uses this::get_options
+	 * @uses this::is_view_all
+	 * @uses esc_attr
+	 * @uses esc_url
 	 * @return array
 	 */
 	public function filter_wp_link_pages_args( $args ) {
@@ -288,8 +303,13 @@ class view_all_posts_pages {
 	/**
 	 * Filter the content if automatic link inclusion is selected.
 	 *
+	 * @global $post
 	 * @param string $content
-	 * @uses this::get_options, $post, this::is_view_all, esc_attr, esc_url, this::url
+	 * @uses this::get_options
+	 * @uses this::is_view_all
+	 * @uses esc_attr
+	 * @uses esc_url
+	 * @uses this::url
 	 * @filter the_content
 	 * @return string
 	 */
@@ -317,8 +337,26 @@ class view_all_posts_pages {
 	/**
 	 * Generate URL
 	 *
+	 * @global $post
+	 * @global $wp_rewrite
 	 * @param int $post_id
-	 * @uses is_singular, in_the_loop, $post, get_permalink, is_home, is_front_page, home_url, is_category, get_category_link, get_query_var, is_tag, get_tag_link, is_tax, get_queried_object, get_term_link, $wp_rewrite, path_join, trailingslashit, add_query_arg
+	 * @uses is_singular
+	 * @uses in_the_loop
+	 * @uses get_permalink
+	 * @uses is_home
+	 * @uses is_front_page
+	 * @uses home_url
+	 * @uses is_category
+	 * @uses get_category_link
+	 * @uses get_query_var
+	 * @uses is_tag
+	 * @uses get_tag_link
+	 * @uses is_tax
+	 * @uses get_queried_object
+	 * @uses get_term_link
+	 * @uses path_join
+	 * @uses trailingslashit
+	 * @uses add_query_arg
 	 * @return string or bool
 	 */
 	public function url( $post_id = false ) {
@@ -385,7 +423,8 @@ class view_all_posts_pages {
 	/**
 	 * Add menu item for options page
 	 *
-	 * @uses __, add_options_page
+	 * @uses __
+	 * @uses add_options_page
 	 * @action admin_menu
 	 * @return null
 	 */
@@ -396,7 +435,14 @@ class view_all_posts_pages {
 	/**
 	 * Render options page
 	 *
-	 * @uses settings_fields, this::get_options, this::post_types_array, __, _e, checked, esc_attr, submit_button
+	 * @uses settings_fields
+	 * @uses this::get_options
+	 * @uses this::post_types_array
+	 * @uses __
+	 * @uses _e
+	 * @uses checked
+	 * @uses esc_attr
+	 * @uses submit_button
 	 * @return string
 	 */
 	public function admin_options() {
@@ -512,7 +558,10 @@ class view_all_posts_pages {
 	 * Validate options
 	 *
 	 * @param array $options
-	 * @uses this::get_options, this::post_types_array, sanitize_text_field, absint
+	 * @uses this::get_options
+	 * @uses this::post_types_array
+	 * @uses sanitize_text_field
+	 * @uses absint
 	 * @return array
 	 */
 	public function admin_options_validate( $options ) {
@@ -581,7 +630,8 @@ class view_all_posts_pages {
 	/**
 	 * Return plugin options array parsed with default options
 	 *
-	 * @uses get_option, wp_parse_args
+	 * @uses get_option
+	 * @uses wp_parse_args
 	 * @return array
 	 */
 	private function get_options() {
@@ -618,7 +668,12 @@ class view_all_posts_pages {
 	/**
 	 * Display admin notice regarding rewrite rules flush.
 	 *
-	 * @uses get_option, apply_filters, _e, __, admin_url, add_query_arg
+	 * @uses get_option
+	 * @uses apply_filters
+	 * @uses _e
+	 * @uses __
+	 * @uses admin_url
+	 * @uses add_query_arg
 	 * @action admin_notices
 	 * @return html or null
 	 */
@@ -658,9 +713,14 @@ function vapp_get_url( $post_id = false ) {
 
 /**
  * Output link to full post view.
+ *
+ * @global $post
  * @param string $link_text
  * @param string $class
- * @uses $post, vapp_get_url, esc_attr, esc_url, esc_html
+ * @uses vapp_get_url
+ * @uses esc_attr
+ * @uses esc_url
+ * @uses esc_html
  * @return string or null
  */
 function vapp_the_link( $link_text = 'View All', $class = 'vapp' ) {
@@ -697,4 +757,3 @@ if ( ! function_exists( 'is_view_all' ) ) {
 		return view_all_posts_pages::get_instance()->is_view_all();
 	}
 }
-?>
