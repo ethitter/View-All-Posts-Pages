@@ -36,22 +36,7 @@ class view_all_posts_pages {
 	private $ns = 'view_all_posts_pages';
 
 	private $settings_key = 'vapp';
-	private $settings_defaults = array(
-		'wlp' => true,
-		'wlp_text' => 'View All',
-		'wlp_class' => 'vapp',
-		'wlp_post_types' => array(
-			'post'
-		),
-		'link' => false,
-		'link_position' => 'below',
-		'link_text' => 'View All',
-		'link_class' => 'vapp',
-		'link_post_types' => array(
-			'post'
-		),
-		'link_priority' => 10
-	);
+	private $settings_defaults = null;
 
 	private $notice_key = 'vapp_admin_notice_dismissed';
 
@@ -148,11 +133,31 @@ class view_all_posts_pages {
 	 * Add rewrite endpoint, which sets query var and rewrite rules.
 	 *
 	 * @global $wp_rewrite
+	 * @uses __
 	 * @uses add_rewrite_endpoint
 	 * @action init
 	 * @return null
 	 */
 	public function action_init() {
+		// Populate default settings, with translation support
+		$this->settings_defaults = array(
+			'wlp'             => true,
+			'wlp_text'        => __( 'View All', 'view_all_posts_pages' ),
+			'wlp_class'       => 'vapp',
+			'wlp_post_types'  => array(
+				'post'
+			),
+			'link'            => false,
+			'link_position'   => 'below',
+			'link_text'       => __( 'View All', 'view_all_posts_pages' ),
+			'link_class'      => 'vapp',
+			'link_post_types' => array(
+				'post'
+			),
+			'link_priority'   => 10,
+		);
+
+		// Register rewrite endpoint, which handles most of our rewrite needs
 		add_rewrite_endpoint( $this->query_var, EP_ALL );
 
 		//Extra rules needed if verbose page rules are requested
@@ -384,13 +389,13 @@ class view_all_posts_pages {
 	 * @return null
 	 */
 	public function action_admin_menu() {
-		add_options_page( __( 'View All Post\'s Pages Options', 'view_all_posts_pages' ), 'View All Post\'s Pages', 'manage_options', $this->ns, array( $this, 'admin_options' ) );
+		add_options_page( __( "View All Post's Pages Options", 'view_all_posts_pages' ), "View All Post's Pages", 'manage_options', $this->ns, array( $this, 'admin_options' ) );
 	}
 
 	/**
 	 * Render options page
 	 *
-	 * @uses settings_fields, this::get_options, this::post_types_array, _e, checked, esc_attr, submit_button
+	 * @uses settings_fields, this::get_options, this::post_types_array, __, _e, checked, esc_attr, submit_button
 	 * @return string
 	 */
 	public function admin_options() {
@@ -406,9 +411,9 @@ class view_all_posts_pages {
 					$post_types = $this->post_types_array();
 				?>
 
-				<h3><em>wp_link_pages</em> Options</h3>
+				<h3><?php printf( __( '%s Options', 'view_all_posts_pages' ), '<em>wp_link_pages</em>' ); ?></h3>
 
-				<p class="description">A "view all" link can be appended to WordPress' standard page navigation using the options below.</p>
+				<p class="description"><?php _e( 'A "view all" link can be appended to WordPress\' standard page navigation using the options below.', 'view_all_posts_pages' ); ?></p>
 
 				<table class="form-table">
 					<tr>
@@ -442,9 +447,9 @@ class view_all_posts_pages {
 					</tr>
 				</table>
 
-				<h3>Standalone Link Options</h3>
+				<h3><?php _e( 'Standalone Link Options', 'view_all_posts_pages' ); ?></h3>
 
-				<p class="description">In addition to appending the "view all" link to WordPress' standard navigation, link(s) can be added above and below post content.</p>
+				<p class="description"><?php _e( 'In addition to appending the "view all" link to WordPress\' standard navigation, link(s) can be added above and below post content.', 'view_all_posts_pages' ); ?></p>
 
 				<table class="form-table">
 					<tr>
