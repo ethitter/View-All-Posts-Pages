@@ -87,7 +87,7 @@ Further ensures plugins and themes correctly see a "View All" page as full post 
 Resolves a problem where requests for view-all templates redirect to the article.
 
 = 0.6 =
-Adds better support for sites that use verbose page rules, resolving situations where requests for print template redirect to the post.
+Adds better support for sites that use verbose page rules, resolving situations where requests for view-all template redirect to the post.
 
 = 0.5 =
 Infinite loops may result from previous method used to display entire post's content for the View All display. This update eliminates that possibility by using the the_post action rather than the the_content filter. Props to the WordPress.com VIP Support team (batmoo) and stevenkword.
