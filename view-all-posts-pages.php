@@ -620,7 +620,6 @@ class view_all_posts_pages {
 					break;
 
 					default:
-						continue;
 					break;
 				}
 			}
