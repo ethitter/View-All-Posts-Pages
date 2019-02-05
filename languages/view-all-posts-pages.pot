@@ -1,0 +1,157 @@
+# Copyright (C) 2019 Erick Hitter & Oomph, Inc.
+# This file is distributed under the same license as the View All Posts Pages package.
+msgid ""
+msgstr ""
+"Project-Id-Version: View All Posts Pages 0.9.1\n"
+"Report-Msgid-Bugs-To: "
+"https://wordpress.org/support/plugin/view-all-posts-pages\n"
+"POT-Creation-Date: 2019-02-05 17:47:01+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+
+#: view-all-posts-pages.php:147 view-all-posts-pages.php:154
+msgid "View All"
+msgstr ""
+
+#: view-all-posts-pages.php:437 view-all-posts-pages.php:466
+msgid "%s Options"
+msgstr ""
+
+#: view-all-posts-pages.php:468
+msgid ""
+"A \"view all\" link can be appended to WordPress' standard page navigation "
+"using the options below."
+msgstr ""
+
+#: view-all-posts-pages.php:472
+msgid "Automatically append link to post's page navigation?"
+msgstr ""
+
+#: view-all-posts-pages.php:474 view-all-posts-pages.php:510
+msgid "Yes"
+msgstr ""
+
+#: view-all-posts-pages.php:475 view-all-posts-pages.php:511
+msgid "No"
+msgstr ""
+
+#: view-all-posts-pages.php:479 view-all-posts-pages.php:531
+msgid "Link text:"
+msgstr ""
+
+#: view-all-posts-pages.php:485 view-all-posts-pages.php:537
+msgid "Link's CSS class(es):"
+msgstr ""
+
+#: view-all-posts-pages.php:489 view-all-posts-pages.php:541
+msgid ""
+"Be aware that Internet Explorer will only interpret the first two CSS "
+"classes."
+msgstr ""
+
+#: view-all-posts-pages.php:493 view-all-posts-pages.php:523
+msgid "Display automatically on:"
+msgstr ""
+
+#: view-all-posts-pages.php:502
+msgid "Standalone Link Options"
+msgstr ""
+
+#: view-all-posts-pages.php:504
+msgid ""
+"In addition to appending the \"view all\" link to WordPress' standard "
+"navigation, link(s) can be added above and below post content."
+msgstr ""
+
+#: view-all-posts-pages.php:508
+msgid "Automatically add links based on settings below?"
+msgstr ""
+
+#: view-all-posts-pages.php:515
+msgid "Automatically place link:"
+msgstr ""
+
+#: view-all-posts-pages.php:517
+msgid "Above content"
+msgstr ""
+
+#: view-all-posts-pages.php:518
+msgid "Below content"
+msgstr ""
+
+#: view-all-posts-pages.php:519
+msgid "Above and below content"
+msgstr ""
+
+#: view-all-posts-pages.php:545
+msgid "Link's priority:"
+msgstr ""
+
+#: view-all-posts-pages.php:549
+msgid ""
+"Priority determines when the link is added to a post's content. You can use "
+"the above setting to modulate the link's placement."
+msgstr ""
+
+#: view-all-posts-pages.php:550
+msgid ""
+"The default value is <strong>10</strong>. Lower values mean the link will "
+"be added earlier, while higher values will add the link later."
+msgstr ""
+
+#: view-all-posts-pages.php:689
+msgid "View All Post's Pages"
+msgstr ""
+
+#: view-all-posts-pages.php:691
+msgid ""
+"You must refresh your site's permalinks before <em>View All Post's "
+"Pages</em> is fully activated. To do so, go to <a "
+"href=\"%s\">Permalinks</a> and click the <strong><em>Save "
+"Changes</em></strong> button at the bottom of the screen."
+msgstr ""
+
+#: view-all-posts-pages.php:693
+msgid "When finished, click <a href=\"%s\">here</a> to hide this message."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "View All Posts Pages"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.oomphinc.com/plugins-modules/view-all-posts-pages/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Provides a \"view all\" (single page) option for posts, pages, and custom "
+"post types paged using WordPress' <a "
+"href=\"http://codex.wordpress.org/Write_Post_SubPanel#Quicktags\" "
+"target=\"_blank\"><code>&lt;!--nextpage--&gt;</code> Quicktag</a> "
+"(multipage posts)."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Erick Hitter & Oomph, Inc."
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.oomphinc.com/"
+msgstr ""

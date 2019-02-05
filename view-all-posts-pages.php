@@ -1,27 +1,30 @@
 <?php
-/*
-Plugin Name: View All Post's Pages
-Plugin URI: http://www.oomphinc.com/plugins-modules/view-all-posts-pages/
-Description: Provides a "view all" (single page) option for posts, pages, and custom post types paged using WordPress' <a href="http://codex.wordpress.org/Write_Post_SubPanel#Quicktags" target="_blank"><code>&lt;!--nextpage--&gt;</code> Quicktag</a> (multipage posts).
-Author: Erick Hitter & Oomph, Inc.
-Version: 0.9.1
-Author URI: http://www.oomphinc.com/
-Text Domain: view_all_posts_pages
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+/**
+ * Plugin Name:     View All Posts Pages
+ * Plugin URI:      http://www.oomphinc.com/plugins-modules/view-all-posts-pages/
+ * Description:     Provides a "view all" (single page) option for posts, pages, and custom post types paged using WordPress' <a href="http://codex.wordpress.org/Write_Post_SubPanel#Quicktags" target="_blank"><code>&lt;!--nextpage--&gt;</code> Quicktag</a> (multipage posts).
+ * Author:          Erick Hitter & Oomph, Inc.
+ * Author URI:      http://www.oomphinc.com/
+ * Text Domain:     view_all_posts_pages
+ * Domain Path:     /languages
+ * Version:         0.9.1
+ *
+ * @package         View_All_Posts_Pages
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 
 class view_all_posts_pages {
 	/**
