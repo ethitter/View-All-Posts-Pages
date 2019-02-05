@@ -121,7 +121,7 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 	 * @action register_deactivation_hook
 	 */
 	public function deactivation_hook() {
-		flush_rewrite_rules(); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.flush_rewrite_rules_flush_rewrite_rules
+		flush_rewrite_rules(); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.flush_rewrite_rules_flush_rewrite_rules, WordPressVIPMinimum.VIP.RestrictedFunctions.rewrite_rules_flush_rewrite_rules
 
 		delete_option( $this->settings_key );
 		delete_option( $this->notice_key );
@@ -270,10 +270,10 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 			$post->post_content = str_replace( "<!--nextpage-->\n", "\n", $post->post_content );
 			$post->post_content = str_replace( '<!--nextpage-->', ' ', $post->post_content );
 
-			$pages = array( $post->post_content );
+			$pages = array( $post->post_content ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
 
-			$more      = 1;
-			$multipage = 0;
+			$more      = 1; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
+			$multipage = 0; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
 		}
 	}
 
@@ -316,11 +316,11 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 		$options = $this->get_options();
 
 		if ( is_array( $options ) ) {
-			extract( $options );
+			extract( $options, EXTR_OVERWRITE );
 
 			// Set global $more to false so that wp_link_pages outputs links for all pages when viewing full post page.
 			if ( $this->is_view_all() ) {
-				$GLOBALS['more'] = false;
+				$GLOBALS['more'] = false; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
 			}
 
 			// Process link text, respecting pagelink parameter.
@@ -362,7 +362,7 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 		global $post;
 
 		if ( ! $this->is_view_all() && is_array( $options ) && array_key_exists( 'link', $options ) && true === $options['link'] && in_array( $post->post_type, $options['link_post_types'] ) ) {
-			extract( $options );
+			extract( $options, EXTR_OVERWRITE );
 
 			$link = '<p class="vapp_wrapper"><a class="' . esc_attr( $link_class ) . '" href="' . esc_url( $this->url() ) . '">' . esc_html( $link_text ) . '</a></p><!-- .vapp_wrapper -->';
 
