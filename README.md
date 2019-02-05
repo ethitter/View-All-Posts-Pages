@@ -45,6 +45,10 @@ This plugin is known to conflict with certain plugins, many pertaining to SEO an
 
 ## Changelog ##
 
+### 0.9.2 ###
+* Introduce PHPCS tests
+* Update plugin based on PHPCS results
+
 ### 0.9.1 ###
 * Security update: correct misuse of `add_query_arg()` as identified by Sucuri: https://blog.sucuri.net/2015/04/security-advisory-xss-vulnerability-affecting-multiple-wordpress-plugins.html.
 
@@ -94,6 +98,9 @@ This plugin is known to conflict with certain plugins, many pertaining to SEO an
 * Initial release
 
 ## Upgrade Notice ##
+
+### 0.9.2 ###
+Adds support for PHP 7.3 and fixes various PHPCS errors, neither of which should impact the plugin's functionality.
 
 ### 0.9.1 ###
 Security update: correct misuse of `add_query_arg()` as identified by Sucuri: https://blog.sucuri.net/2015/04/security-advisory-xss-vulnerability-affecting-multiple-wordpress-plugins.html.

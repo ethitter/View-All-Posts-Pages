@@ -1,5 +1,7 @@
-<?php
+<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
 /**
+ * View All Posts Pages
+ *
  * Plugin Name:     View All Posts Pages
  * Plugin URI:      http://www.oomphinc.com/plugins-modules/view-all-posts-pages/
  * Description:     Provides a "view all" (single page) option for posts, pages, and custom post types paged using WordPress' <a href="http://codex.wordpress.org/Write_Post_SubPanel#Quicktags" target="_blank"><code>&lt;!--nextpage--&gt;</code> Quicktag</a> (multipage posts).
@@ -7,7 +9,7 @@
  * Author URI:      http://www.oomphinc.com/
  * Text Domain:     view_all_posts_pages
  * Domain Path:     /languages
- * Version:         0.9.1
+ * Version:         0.9.2
  *
  * @package         View_All_Posts_Pages
  *
@@ -26,22 +28,50 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class view_all_posts_pages {
+/**
+ * Class view_all_posts_pages
+ */
+class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassName, Generic.Classes.OpeningBraceSameLine.ContentAfterBrace
 	/**
 	 * Singleton
+	 *
+	 * @var self
 	 */
 	private static $__instance = null;
 
 	/**
 	 * Class variables
+	 *
+	 * @var string
 	 */
 	private $query_var = 'view-all';
 
+	/**
+	 * Namespace.
+	 *
+	 * @var string
+	 */
 	private $ns = 'view_all_posts_pages';
 
-	private $settings_key      = 'vapp';
+	/**
+	 * Option name.
+	 *
+	 * @var string
+	 */
+	private $settings_key = 'vapp';
+
+	/**
+	 * Default settings
+	 *
+	 * @var array|null
+	 */
 	private $settings_defaults = null;
 
+	/**
+	 * Option indicating admin notice was dismissed.
+	 *
+	 * @var string
+	 */
 	private $notice_key = 'vapp_admin_notice_dismissed';
 
 	/**
@@ -70,7 +100,6 @@ class view_all_posts_pages {
 	 *
 	 * @uses register_deactivation_hook
 	 * @uses add_action
-	 * @return null
 	 */
 	private function setup() {
 		register_deactivation_hook( __FILE__, array( $this, 'deactivation_hook' ) );
@@ -90,10 +119,9 @@ class view_all_posts_pages {
 	 * @uses flush_rewrite_rules
 	 * @uses delete_option
 	 * @action register_deactivation_hook
-	 * @return null
 	 */
 	public function deactivation_hook() {
-		flush_rewrite_rules();
+		flush_rewrite_rules(); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.flush_rewrite_rules_flush_rewrite_rules
 
 		delete_option( $this->settings_key );
 		delete_option( $this->notice_key );
@@ -106,12 +134,15 @@ class view_all_posts_pages {
 	 * @uses apply_filters
 	 * @uses update_option
 	 * @action admin_init
-	 * @return null
 	 */
 	public function action_admin_init() {
 		register_setting( $this->settings_key, $this->settings_key, array( $this, 'admin_options_validate' ) );
 
-		if ( isset( $_GET[ $this->notice_key ] ) && apply_filters( 'vapp_display_rewrite_rules_notice', true ) ) {
+		if (
+			isset( $_GET[ $this->notice_key ], $_GET[ $this->notice_key . '_nonce' ] ) &&
+			wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET[ $this->notice_key . '_nonce' ] ) ), $this->notice_key ) &&
+			apply_filters( 'vapp_display_rewrite_rules_notice', true )
+		) {
 			update_option( $this->notice_key, 1 );
 		}
 	}
@@ -140,10 +171,9 @@ class view_all_posts_pages {
 	 * @uses add_action
 	 * @uses add_rewrite_endpoint
 	 * @action init
-	 * @return null
 	 */
 	public function action_init() {
-		// Populate default settings, with translation support
+		// Populate default settings, with translation support.
 		$this->settings_defaults = array(
 			'wlp'             => true,
 			'wlp_text'        => __( 'View All', 'view_all_posts_pages' ),
@@ -176,18 +206,18 @@ class view_all_posts_pages {
 			add_action( 'admin_notices', array( $this, 'action_admin_notices_activation' ) );
 		}
 
-		// Register rewrite endpoint, which handles most of our rewrite needs
+		// Register rewrite endpoint, which handles most of our rewrite needs.
 		add_rewrite_endpoint( $this->query_var, EP_ALL );
 
-		// Extra rules needed if verbose page rules are requested
+		// Extra rules needed if verbose page rules are requested.
 		global $wp_rewrite;
 		if ( $wp_rewrite->use_verbose_page_rules ) {
-			// Build regex
+			// Build regex.
 			$regex  = substr( str_replace( $wp_rewrite->rewritecode, $wp_rewrite->rewritereplace, $wp_rewrite->permalink_structure ), 1 );
 			$regex  = trailingslashit( $regex );
 			$regex .= $this->query_var . '/?$';
 
-			// Build corresponding query string
+			// Build corresponding query string.
 			$query = substr( str_replace( $wp_rewrite->rewritecode, $wp_rewrite->queryreplace, $wp_rewrite->permalink_structure ), 1 );
 			$query = explode( '/', $query );
 			$query = array_filter( $query );
@@ -202,7 +232,7 @@ class view_all_posts_pages {
 
 			$query = implode( '&', $query );
 
-			// Add rule
+			// Add rule.
 			add_rewrite_rule( $regex, $wp_rewrite->index . '?' . $query, 'top' );
 		}
 	}
@@ -210,10 +240,10 @@ class view_all_posts_pages {
 	/**
 	 * Prevent canonical redirect if full-post page is requested.
 	 *
-	 * @param string $url
+	 * @param string $url Canonical URL.
 	 * @uses this::is_view_all
 	 * @filter redirect_canonical
-	 * @return string or false
+	 * @return string|false
 	 */
 	public function filter_redirect_canonical( $url ) {
 		if ( $this->is_view_all() ) {
@@ -227,10 +257,9 @@ class view_all_posts_pages {
 	 * Modify post variables to display entire post on one page.
 	 *
 	 * @global $pages, $more
-	 * @param object $post
+	 * @param WP_Post $post Post object.
 	 * @uses this::is_view_all
 	 * @action the_post
-	 * @return null
 	 */
 	public function action_the_post( $post ) {
 		if ( $this->is_view_all() ) {
@@ -253,7 +282,7 @@ class view_all_posts_pages {
 	 * Automatic inclusion can be disabled by passing false through the vapp_display_link filter.
 	 *
 	 * @global $post
-	 * @param array $args
+	 * @param array $args wp_link_pages arguments.
 	 * @uses this::get_options
 	 * @uses apply_filters
 	 * @uses add_filter
@@ -265,7 +294,7 @@ class view_all_posts_pages {
 
 		$options = $this->get_options();
 
-		if ( in_array( $post->post_type, $options['wlp_post_types'] ) && apply_filters( 'vapp_display_link', true, (int) $post->ID, $options, $post ) ) {
+		if ( in_array( $post->post_type, $options['wlp_post_types'], true ) && apply_filters( 'vapp_display_link', true, (int) $post->ID, $options, $post ) ) {
 			add_filter( 'wp_link_pages_args', array( $this, 'filter_wp_link_pages_args' ), 999 );
 		}
 
@@ -276,7 +305,7 @@ class view_all_posts_pages {
 	 * Filter wp_link_pages arguments to append "View all" link to output.
 	 *
 	 * @global $more
-	 * @param array $args
+	 * @param array $args wp_link_pages arguments.
 	 * @uses this::get_options
 	 * @uses this::is_view_all
 	 * @uses esc_attr
@@ -289,7 +318,7 @@ class view_all_posts_pages {
 		if ( is_array( $options ) ) {
 			extract( $options );
 
-			// Set global $more to false so that wp_link_pages outputs links for all pages when viewing full post page
+			// Set global $more to false so that wp_link_pages outputs links for all pages when viewing full post page.
 			if ( $this->is_view_all() ) {
 				$GLOBALS['more'] = false;
 			}
@@ -297,7 +326,7 @@ class view_all_posts_pages {
 			// Process link text, respecting pagelink parameter.
 			$link_text = str_replace( '%', $wlp_text, $args['pagelink'] );
 
-			// View all
+			// View all.
 			$link = ' ' . $args['link_before'];
 
 			if ( $this->is_view_all() ) {
@@ -318,7 +347,7 @@ class view_all_posts_pages {
 	 * Filter the content if automatic link inclusion is selected.
 	 *
 	 * @global $post
-	 * @param string $content
+	 * @param string $content Post content.
 	 * @uses this::get_options
 	 * @uses this::is_view_all
 	 * @uses esc_attr
@@ -337,11 +366,11 @@ class view_all_posts_pages {
 
 			$link = '<p class="vapp_wrapper"><a class="' . esc_attr( $link_class ) . '" href="' . esc_url( $this->url() ) . '">' . esc_html( $link_text ) . '</a></p><!-- .vapp_wrapper -->';
 
-			if ( 'above' == $link_position ) {
+			if ( 'above' === $link_position ) {
 				$content = $link . $content;
-			} elseif ( 'below' == $link_position ) {
+			} elseif ( 'below' === $link_position ) {
 				$content = $content . $link;
-			} elseif ( 'both' == $link_position ) {
+			} elseif ( 'both' === $link_position ) {
 				$content = $link . $content . $link;
 			}
 		}
@@ -354,7 +383,7 @@ class view_all_posts_pages {
 	 *
 	 * @global $post
 	 * @global $wp_rewrite
-	 * @param int $post_id
+	 * @param int|false $post_id Post ID.
 	 * @uses is_singular
 	 * @uses in_the_loop
 	 * @uses get_permalink
@@ -377,7 +406,7 @@ class view_all_posts_pages {
 	public function url( $post_id = false ) {
 		$link = false;
 
-		// Get link base specific to page type being viewed
+		// Get link base specific to page type being viewed.
 		if ( is_singular() || in_the_loop() ) {
 			$post_id = intval( $post_id );
 
@@ -397,21 +426,7 @@ class view_all_posts_pages {
 			$link = get_category_link( get_query_var( 'cat' ) );
 		} elseif ( is_tag() ) {
 			$link = get_tag_link( get_query_var( 'tag_id' ) );
-		}
-		/** DISABLED FOR NOW AS PRINTING OF DATE-BASED ARCHIVES DOESN'T WORK YET
-		elseif ( is_date() ) {
-			$year = get_query_var( 'year' );
-			$monthnum = get_query_var( 'monthnum' );
-			$day = get_query_var( 'day' );
-
-			if ( $day )
-				$link = get_day_link( $year, $monthnum, $day );
-			elseif ( $monthnum )
-				$link = get_month_link( $year, $monthnum );
-			else
-				$link = get_year_link( $year );
-		}*/
-		elseif ( is_tax() ) {
+		} elseif ( is_tax() ) {
 			$queried_object = get_queried_object();
 
 			if ( is_object( $queried_object ) && property_exists( $queried_object, 'taxonomy' ) && property_exists( $queried_object, 'term_id' ) ) {
@@ -419,7 +434,7 @@ class view_all_posts_pages {
 			}
 		}
 
-		// If link base is set, build link
+		// If link base is set, build link.
 		if ( false !== $link ) {
 			global $wp_rewrite;
 
@@ -443,9 +458,9 @@ class view_all_posts_pages {
 	 * @uses __
 	 * @uses add_options_page
 	 * @action admin_menu
-	 * @return null
 	 */
 	public function action_admin_menu() {
+		/* translators: 1: Plugin name. */
 		add_options_page( sprintf( __( '%s Options', 'view_all_posts_pages' ), "View All Post's Pages" ), "View All Post's Pages", 'manage_options', $this->ns, array( $this, 'admin_options' ) );
 	}
 
@@ -460,7 +475,6 @@ class view_all_posts_pages {
 	 * @uses checked
 	 * @uses esc_attr
 	 * @uses submit_button
-	 * @return string
 	 */
 	public function admin_options() {
 		?>
@@ -475,101 +489,110 @@ class view_all_posts_pages {
 					$post_types = $this->post_types_array();
 				?>
 
-				<h3><?php printf( __( '%s Options', 'view_all_posts_pages' ), '<em>wp_link_pages</em>' ); ?></h3>
+				<h3>
+					<?php
+					/* translators: 1: WordPress function name. */
+						printf( wp_kses_post( __( '%s Options', 'view_all_posts_pages' ) ), '<em>wp_link_pages</em>' );
+					?>
+				</h3>
 
-				<p class="description"><?php _e( 'A "view all" link can be appended to WordPress\' standard page navigation using the options below.', 'view_all_posts_pages' ); ?></p>
+				<p class="description"><?php esc_html_e( 'A "view all" link can be appended to WordPress\' standard page navigation using the options below.', 'view_all_posts_pages' ); ?></p>
 
 				<table class="form-table">
 					<tr>
-						<th scope="row"><?php _e( 'Automatically append link to post\'s page navigation?', 'view_all_posts_pages' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Automatically append link to post\'s page navigation?', 'view_all_posts_pages' ); ?></th>
 						<td>
-							<input type="radio" name="<?php echo $this->settings_key; ?>[wlp]" id="wlp-true" value="1"<?php checked( $options['wlp'], true, true ); ?> /> <label for="wlp-true"><?php _e( 'Yes', 'view_all_posts_pages' ); ?></label><br />
-							<input type="radio" name="<?php echo $this->settings_key; ?>[wlp]" id="wlp-false" value="0"<?php checked( $options['wlp'], false, true ); ?> /> <label for="wlp-false"><?php _e( 'No', 'view_all_posts_pages' ); ?></label>
+							<input type="radio" name="<?php echo esc_attr( $this->settings_key ); ?>[wlp]" id="wlp-true" value="1"<?php checked( $options['wlp'], true, true ); ?> /> <label for="wlp-true"><?php esc_html_e( 'Yes', 'view_all_posts_pages' ); ?></label><br />
+							<input type="radio" name="<?php echo esc_attr( $this->settings_key ); ?>[wlp]" id="wlp-false" value="0"<?php checked( $options['wlp'], false, true ); ?> /> <label for="wlp-false"><?php esc_html_e( 'No', 'view_all_posts_pages' ); ?></label>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="wlp_text"><?php _e( 'Link text:', 'view_all_posts_pages' ); ?></label></th>
+						<th scope="row"><label for="wlp_text"><?php esc_html_e( 'Link text:', 'view_all_posts_pages' ); ?></label></th>
 						<td>
-							<input type="text" name="<?php echo $this->settings_key; ?>[wlp_text]" id="wlp_text" value="<?php echo esc_attr( $options['wlp_text'] ); ?>" class="regular-text" />
+							<input type="text" name="<?php echo esc_attr( $this->settings_key ); ?>[wlp_text]" id="wlp_text" value="<?php echo esc_attr( $options['wlp_text'] ); ?>" class="regular-text" />
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="wlp_class"><?php _e( 'Link\'s CSS class(es):', 'view_all_posts_pages' ); ?></label></th>
+						<th scope="row"><label for="wlp_class"><?php esc_html_e( 'Link\'s CSS class(es):', 'view_all_posts_pages' ); ?></label></th>
 						<td>
-							<input type="text" name="<?php echo $this->settings_key; ?>[wlp_class]" id="wlp_class" value="<?php echo esc_attr( $options['wlp_class'] ); ?>" class="regular-text" />
+							<input type="text" name="<?php echo esc_attr( $this->settings_key ); ?>[wlp_class]" id="wlp_class" value="<?php echo esc_attr( $options['wlp_class'] ); ?>" class="regular-text" />
 
-							<p class="description"><?php _e( 'Be aware that Internet Explorer will only interpret the first two CSS classes.', 'view_all_posts_pages' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Be aware that Internet Explorer will only interpret the first two CSS classes.', 'view_all_posts_pages' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php _e( 'Display automatically on:', 'view_all_posts_pages' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Display automatically on:', 'view_all_posts_pages' ); ?></th>
 						<td>
 							<?php foreach ( $post_types as $post_type ) : ?>
-								<input type="checkbox" name="<?php echo $this->settings_key; ?>[wlp_post_types][]" id="wlp-pt-<?php echo $post_type->name; ?>" value="<?php echo $post_type->name; ?>"
-																		<?php 
-																		if ( in_array( $post_type->name, $options['wlp_post_types'] ) ) {
-																			echo ' checked="checked"';} 
-																		?>
-								 /> <label for="wlp-pt-<?php echo $post_type->name; ?>"><?php echo $post_type->labels->name; ?></label><br />
+								<input type="checkbox" name="<?php echo esc_attr( $this->settings_key ); ?>[wlp_post_types][]" id="wlp-pt-<?php echo esc_attr( $post_type->name ); ?>" value="<?php echo esc_attr( $post_type->name ); ?>"
+									<?php
+									if ( in_array( $post_type->name, $options['wlp_post_types'], true ) ) {
+										echo ' checked="checked"';
+									}
+									?>
+								/>
+								<label for="wlp-pt-<?php echo esc_attr( $post_type->name ); ?>"><?php echo esc_html( $post_type->labels->name ); ?></label><br />
 							<?php endforeach; ?>
 						</td>
 					</tr>
 				</table>
 
-				<h3><?php _e( 'Standalone Link Options', 'view_all_posts_pages' ); ?></h3>
+				<h3><?php esc_html_e( 'Standalone Link Options', 'view_all_posts_pages' ); ?></h3>
 
-				<p class="description"><?php _e( 'In addition to appending the "view all" link to WordPress\' standard navigation, link(s) can be added above and below post content.', 'view_all_posts_pages' ); ?></p>
+				<p class="description"><?php esc_html_e( 'In addition to appending the "view all" link to WordPress\' standard navigation, link(s) can be added above and below post content.', 'view_all_posts_pages' ); ?></p>
 
 				<table class="form-table">
 					<tr>
-						<th scope="row"><?php _e( 'Automatically add links based on settings below?', 'view_all_posts_pages' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Automatically add links based on settings below?', 'view_all_posts_pages' ); ?></th>
 						<td>
-							<input type="radio" name="<?php echo $this->settings_key; ?>[link]" id="link-true" value="1"<?php checked( $options['link'], true, true ); ?> /> <label for="link-true"><?php _e( 'Yes', 'view_all_posts_pages' ); ?></label><br />
-							<input type="radio" name="<?php echo $this->settings_key; ?>[link]" id="link-false" value="0"<?php checked( $options['link'], false, true ); ?> /> <label for="link-false"><?php _e( 'No', 'view_all_posts_pages' ); ?></label>
+							<input type="radio" name="<?php echo esc_attr( $this->settings_key ); ?>[link]" id="link-true" value="1"<?php checked( $options['link'], true, true ); ?> /> <label for="link-true"><?php esc_html_e( 'Yes', 'view_all_posts_pages' ); ?></label><br />
+							<input type="radio" name="<?php echo esc_attr( $this->settings_key ); ?>[link]" id="link-false" value="0"<?php checked( $options['link'], false, true ); ?> /> <label for="link-false"><?php esc_html_e( 'No', 'view_all_posts_pages' ); ?></label>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php _e( 'Automatically place link:', 'view_all_posts_pages' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Automatically place link:', 'view_all_posts_pages' ); ?></th>
 						<td>
-							<input type="radio" name="<?php echo $this->settings_key; ?>[link_position]" id="link_position-above" value="above"<?php checked( $options['link_position'], 'above', true ); ?> /> <label for="link_position-above"><?php _e( 'Above content', 'view_all_posts_pages' ); ?></label><br />
-							<input type="radio" name="<?php echo $this->settings_key; ?>[link_position]" id="link_position-below" value="below"<?php checked( $options['link_position'], 'below', true ); ?> /> <label for="link_position-below"><?php _e( 'Below content', 'view_all_posts_pages' ); ?></label><br />
-							<input type="radio" name="<?php echo $this->settings_key; ?>[link_position]" id="link_position-both" value="both"<?php checked( $options['link_position'], 'both', true ); ?> /> <label for="link_position-both"><?php _e( 'Above and below content', 'view_all_posts_pages' ); ?></label>
+							<input type="radio" name="<?php echo esc_attr( $this->settings_key ); ?>[link_position]" id="link_position-above" value="above"<?php checked( $options['link_position'], 'above', true ); ?> /> <label for="link_position-above"><?php esc_html_e( 'Above content', 'view_all_posts_pages' ); ?></label><br />
+							<input type="radio" name="<?php echo esc_attr( $this->settings_key ); ?>[link_position]" id="link_position-below" value="below"<?php checked( $options['link_position'], 'below', true ); ?> /> <label for="link_position-below"><?php esc_html_e( 'Below content', 'view_all_posts_pages' ); ?></label><br />
+							<input type="radio" name="<?php echo esc_attr( $this->settings_key ); ?>[link_position]" id="link_position-both" value="both"<?php checked( $options['link_position'], 'both', true ); ?> /> <label for="link_position-both"><?php esc_html_e( 'Above and below content', 'view_all_posts_pages' ); ?></label>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php _e( 'Display automatically on:', 'view_all_posts_pages' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Display automatically on:', 'view_all_posts_pages' ); ?></th>
 						<td>
 							<?php foreach ( $post_types as $post_type ) : ?>
-								<input type="checkbox" name="<?php echo $this->settings_key; ?>[link_post_types][]" id="link-pt-<?php echo $post_type->name; ?>" value="<?php echo $post_type->name; ?>"
-																		<?php 
-																		if ( in_array( $post_type->name, $options['link_post_types'] ) ) {
-																			echo ' checked="checked"';} 
-																		?>
-								 /> <label for="link-pt-<?php echo $post_type->name; ?>"><?php echo $post_type->labels->name; ?></label><br />
+								<input type="checkbox" name="<?php echo esc_attr( $this->settings_key ); ?>[link_post_types][]" id="link-pt-<?php echo esc_attr( $post_type->name ); ?>" value="<?php echo esc_attr( $post_type->name ); ?>"
+									<?php
+									if ( in_array( $post_type->name, $options['link_post_types'], true ) ) {
+										echo ' checked="checked"';
+									}
+									?>
+								/>
+								<label for="link-pt-<?php echo esc_attr( $post_type->name ); ?>"><?php echo esc_html( $post_type->labels->name ); ?></label><br />
 							<?php endforeach; ?>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="link_text"><?php _e( 'Link text:', 'view_all_posts_pages' ); ?></label></th>
+						<th scope="row"><label for="link_text"><?php esc_html_e( 'Link text:', 'view_all_posts_pages' ); ?></label></th>
 						<td>
-							<input type="text" name="<?php echo $this->settings_key; ?>[link_text]" id="link_text" value="<?php echo esc_attr( $options['link_text'] ); ?>" class="regular-text" />
+							<input type="text" name="<?php echo esc_attr( $this->settings_key ); ?>[link_text]" id="link_text" value="<?php echo esc_attr( $options['link_text'] ); ?>" class="regular-text" />
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="link_class"><?php _e( 'Link\'s CSS class(es):', 'view_all_posts_pages' ); ?></label></th>
+						<th scope="row"><label for="link_class"><?php esc_html_e( 'Link\'s CSS class(es):', 'view_all_posts_pages' ); ?></label></th>
 						<td>
-							<input type="text" name="<?php echo $this->settings_key; ?>[link_class]" id="link_class" value="<?php echo esc_attr( $options['link_class'] ); ?>" class="regular-text" />
+							<input type="text" name="<?php echo esc_attr( $this->settings_key ); ?>[link_class]" id="link_class" value="<?php echo esc_attr( $options['link_class'] ); ?>" class="regular-text" />
 
-							<p class="description"><?php _e( 'Be aware that Internet Explorer will only interpret the first two CSS classes.', 'view_all_posts_pages' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Be aware that Internet Explorer will only interpret the first two CSS classes.', 'view_all_posts_pages' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="link_priority"><?php _e( 'Link\'s priority:', 'view_all_posts_pages' ); ?></label></th>
+						<th scope="row"><label for="link_priority"><?php esc_html_e( 'Link\'s priority:', 'view_all_posts_pages' ); ?></label></th>
 						<td>
-							<input type="text" name="<?php echo $this->settings_key; ?>[link_priority]" id="link_priority" class="small-text code" value="<?php echo esc_attr( $options['link_priority'] ); ?>" />
+							<input type="text" name="<?php echo esc_attr( $this->settings_key ); ?>[link_priority]" id="link_priority" class="small-text code" value="<?php echo esc_attr( $options['link_priority'] ); ?>" />
 
-							<p class="description"><?php _e( 'Priority determines when the link is added to a post\'s content. You can use the above setting to modulate the link\'s placement.', 'view_all_posts_pages' ); ?></p>
-							<p class="description"><?php _e( 'The default value is <strong>10</strong>. Lower values mean the link will be added earlier, while higher values will add the link later.', 'view_all_posts_pages' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Priority determines when the link is added to a post\'s content. You can use the above setting to modulate the link\'s placement.', 'view_all_posts_pages' ); ?></p>
+							<p class="description"><?php echo wp_kses_post( __( 'The default value is <strong>10</strong>. Lower values mean the link will be added earlier, while higher values will add the link later.', 'view_all_posts_pages' ) ); ?></p>
 						</td>
 					</tr>
 				</table>
@@ -584,7 +607,7 @@ class view_all_posts_pages {
 	/**
 	 * Validate options
 	 *
-	 * @param array $options
+	 * @param array $options Plugin options.
 	 * @uses this::get_options
 	 * @uses this::post_types_array
 	 * @uses sanitize_text_field
@@ -609,7 +632,7 @@ class view_all_posts_pages {
 							'both',
 						);
 
-						$new_options[ $key ] = in_array( $value, $placements ) ? $value : 'below';
+						$new_options[ $key ] = in_array( $value, $placements, true ) ? $value : 'below';
 						break;
 
 					case 'wlp_post_types':
@@ -620,7 +643,7 @@ class view_all_posts_pages {
 
 						if ( is_array( $value ) && is_array( $post_types ) ) {
 							foreach ( $post_types as $post_type ) {
-								if ( in_array( $post_type->name, $value ) ) {
+								if ( in_array( $post_type->name, $value, true ) ) {
 									$new_options[ $key ][] = $post_type->name;
 								}
 							}
@@ -633,7 +656,7 @@ class view_all_posts_pages {
 					case 'link_class':
 						$value = sanitize_text_field( $value );
 
-						if ( ( 'wlp_text' == $key || 'link_text' == $key ) && empty( $value ) ) {
+						if ( ( 'wlp_text' === $key || 'link_text' === $key ) && empty( $value ) ) {
 							$value = 'View all';
 						}
 
@@ -689,7 +712,7 @@ class view_all_posts_pages {
 	private function post_types_array() {
 		$post_types = array();
 		foreach ( get_post_types( array(), 'objects' ) as $post_type ) {
-			if ( false == $post_type->_builtin || 'post' == $post_type->name || 'page' == $post_type->name ) {
+			if ( false === $post_type->_builtin || 'post' === $post_type->name || 'page' === $post_type->name ) {
 				$post_types[] = $post_type;
 			}
 		}
@@ -707,18 +730,32 @@ class view_all_posts_pages {
 	 * @uses admin_url
 	 * @uses add_query_arg
 	 * @action admin_notices
-	 * @return html or null
 	 */
 	public function action_admin_notices_activation() {
 		if ( ! get_option( $this->notice_key ) && apply_filters( 'vapp_display_rewrite_rules_notice', true ) ) :
 			?>
 
 		<div id="wpf-rewrite-flush-warning" class="error fade">
-			<p><strong><?php _e( 'View All Post\'s Pages', 'view_all_posts_pages' ); ?></strong></p>
+			<p><strong><?php esc_html_e( 'View All Post\'s Pages', 'view_all_posts_pages' ); ?></strong></p>
 
-			<p><?php printf( __( 'You must refresh your site\'s permalinks before <em>View All Post\'s Pages</em> is fully activated. To do so, go to <a href="%s">Permalinks</a> and click the <strong><em>Save Changes</em></strong> button at the bottom of the screen.', 'view_all_posts_pages' ), esc_url( admin_url( 'options-permalink.php' ) ) ); ?></p>
+			<p>
+				<?php
+					/* translators: 1: Permalinks settings page URL. */
+					printf( wp_kses_post( __( 'You must refresh your site\'s permalinks before <em>View All Post\'s Pages</em> is fully activated. To do so, go to <a href="%s">Permalinks</a> and click the <strong><em>Save Changes</em></strong> button at the bottom of the screen.', 'view_all_posts_pages' ) ), esc_url( admin_url( 'options-permalink.php' ) ) );
+				?>
+			</p>
 
-			<p><?php printf( __( 'When finished, click <a href="%s">here</a> to hide this message.', 'view_all_posts_pages' ), esc_url( admin_url( add_query_arg( $this->notice_key, 1, 'index.php' ) ) ) ); ?></p>
+			<p>
+				<?php
+					$query_args = array(
+						$this->notice_key            => 1,
+						$this->notice_key . '_nonce' => wp_create_nonce( $this->notice_key ),
+					);
+
+					/* translators: 1: URL to dismiss admin notice. */
+					printf( wp_kses_post( __( 'When finished, click <a href="%s">here</a> to hide this message.', 'view_all_posts_pages' ) ), esc_url( admin_url( add_query_arg( $query_args, 'index.php' ) ) ) );
+				?>
+			</p>
 		</div>
 
 			<?php
@@ -735,7 +772,7 @@ $GLOBALS['vapp'] = view_all_posts_pages::get_instance();
 /**
  * Shortcut to public function for generating full post view URL
  *
- * @param int $post_id
+ * @param int|false $post_id Post ID.
  * @uses view_all_posts_pages::get_instance
  * @return string or bool
  */
@@ -747,13 +784,12 @@ function vapp_get_url( $post_id = false ) {
  * Output link to full post view.
  *
  * @global $post
- * @param string $link_text
- * @param string $class
+ * @param string $link_text Link text.
+ * @param string $class Link class.
  * @uses vapp_get_url
  * @uses esc_attr
  * @uses esc_url
  * @uses esc_html
- * @return string or null
  */
 function vapp_the_link( $link_text = 'View All', $class = 'vapp' ) {
 	global $post;
@@ -762,7 +798,7 @@ function vapp_the_link( $link_text = 'View All', $class = 'vapp' ) {
 	if ( $url ) {
 		$link = '<a ' . ( $class ? 'class="' . esc_attr( $class ) . '"' : '' ) . ' href="' . esc_url( $url ) . '">' . esc_html( $link_text ) . '</a>';
 
-		echo $link;
+		echo wp_kses_post( $link );
 	}
 }
 
@@ -770,7 +806,7 @@ function vapp_the_link( $link_text = 'View All', $class = 'vapp' ) {
  * Filter wp_link_pages args.
  * Function is a shortcut to class' filter.
  *
- * @param array $args
+ * @param array $args wp_link_pages args.
  * @uses view_all_posts_pages::get_instance
  * @return array
  */
@@ -785,7 +821,7 @@ if ( ! function_exists( 'is_view_all' ) ) {
 	 * @uses view_all_posts_pages::get_instance
 	 * @return bool
 	 */
-	function is_view_all() {
+	function is_view_all() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 		return view_all_posts_pages::get_instance()->is_view_all();
 	}
 }
