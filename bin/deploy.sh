@@ -62,8 +62,8 @@ echo "ℹ︎ PLUGIN_SLUG is $PLUGIN_SLUG"
 echo "ℹ︎ PLUGIN_VERSION is $PLUGIN_VERSION"
 
 SVN_URL="https://plugins.svn.wordpress.org/${PLUGIN_SLUG}/"
-SVN_DIR="/tmp/svn-${PLUGIN_SLUG}"
-TMP_DIR="/tmp/git-archive"
+SVN_DIR="$CI_BUILDS_DIR/svn-${PLUGIN_SLUG}"
+TMP_DIR="$CI_BUILDS_DIR/git-archive"
 
 # Checkout just trunk for efficiency
 # Tagging will be handled on the SVN level
@@ -93,6 +93,7 @@ if [[ ! -e "$CI_PROJECT_DIR/.gitattributes" ]]; then
 fi
 
 # This will exclude everything in the .gitattributes file with the export-ignore flag
+mkdir "$TMP_DIR"
 git archive HEAD | tar x --directory="$TMP_DIR"
 
 cd "$SVN_DIR"
