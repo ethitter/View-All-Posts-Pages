@@ -754,7 +754,7 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 
 					/* translators: 1: URL to dismiss admin notice. */
 					printf( wp_kses_post( __( 'When finished, click <a href="%s">here</a> to hide this message.', 'view_all_posts_pages' ) ), esc_url( admin_url( add_query_arg( $query_args, 'index.php' ) ) ) );
-				?>
+					?>
 			</p>
 		</div>
 
