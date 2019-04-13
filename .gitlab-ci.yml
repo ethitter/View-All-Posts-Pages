@@ -46,6 +46,8 @@ PHPunit:PHP7.3:MySQL:
 
 PluginSVN:
   stage: deploy
+  before_script:
+    - date
   script: ./bin/deploy.sh
   when: on_success
 #  only:
