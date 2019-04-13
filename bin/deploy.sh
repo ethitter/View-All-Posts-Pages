@@ -58,11 +58,6 @@ if [[ -z "$PLUGIN_VERSION" ]]; then
 	exit 1
 fi
 
-if [[ -z "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" || "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" != "master" ]]; then
-	echo "Build branch is required and must be 'master'" 1>&2
-	exit 0
-fi
-
 echo "ℹ︎ PLUGIN_SLUG is $PLUGIN_SLUG"
 echo "ℹ︎ PLUGIN_VERSION is $PLUGIN_VERSION"
 
@@ -121,6 +116,12 @@ echo "➤ Copying tag..."
 svn cp "trunk" "tags/$PLUGIN_VERSION"
 
 svn status
+
+# Stop here unless this is a merge into master.
+if [[ -z "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" || "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" != "master" ]]; then
+	echo "ℹ︎ EXITING before commit step as this is the '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}' branch, not the 'master' branch." 1>&2
+	exit 0
+fi
 
 echo "➤ Committing files..."
 svn commit -m "Update to version $PLUGIN_VERSION from GitLab ($CI_PROJECT_URL)" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
