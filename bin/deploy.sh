@@ -1,10 +1,45 @@
 #!/usr/bin/env bash
 
-echo "Unfinished" 1>&2
-exit 1
+## MIT License
+##
+## Copyright (c) 2019 Helen Hou-Sandi
+## Copyright (c) 2019 Erick Hitter
+##
+## Permission is hereby granted, free of charge, to any person obtaining a copy
+## of this software and associated documentation files (the "Software"), to deal
+## in the Software without restriction, including without limitation the rights
+## to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+## copies of the Software, and to permit persons to whom the Software is
+## furnished to do so, subject to the following conditions:
+##
+## The above copyright notice and this permission notice shall be included in all
+## copies or substantial portions of the Software.
+##
+## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+## SOFTWARE.
 
+# Note that this does not use pipefail
+# because if the grep later doesn't match any deleted files,
+# which is likely the majority case,
+# it does not exit with a 0, and I only care about the final exit.
+set -eo
+
+# Ensure SVN username and password are set
+# IMPORTANT: while secrets are encrypted and not viewable in the GitHub UI,
+# they are by necessity provided as plaintext in the context of the Action,
+# so do not echo or use debug mode unless you want your secrets exposed!
 if [[ -z "$CI" ]]; then
 	echo "Script is only to be run by GitLab CI" 1>&2
+	exit 1
+fi
+
+if [[ -z "$WP_ORG_USERNAME" ]]; then
+	echo "WordPress.org password not set" 1>&2
 	exit 1
 fi
 
@@ -13,91 +48,81 @@ if [[ -z "$WP_ORG_PASSWORD" ]]; then
 	exit 1
 fi
 
+if [[ -z "$PLUGIN_SLUG" ]]; then
+	echo "Plugin's SVN slug is not set" 1>&2
+	exit 1
+fi
+
+if [[ -z "$PLUGIN_VERSION" ]]; then
+	echo "Plugin's version is not set" 1>&2
+	exit 1
+fi
+
 if [[ -z "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" || "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" != "master" ]]; then
 	echo "Build branch is required and must be 'master'" 1>&2
 	exit 0
 fi
 
-WP_ORG_USERNAME="ethitter"
-PLUGIN="view-all-posts-pages"
-PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
-PLUGIN_BUILDS_PATH="$PROJECT_ROOT/builds"
-#PLUGIN_BUILD_CONFIG_PATH="$PROJECT_ROOT/build-cfg"
-#VERSION=$(/usr/bin/php -f "$PLUGIN_BUILD_CONFIG_PATH/utils/get_plugin_version.php" "$PROJECT_ROOT" "$PLUGIN")
-VERSION=grep -o "(^|\s|\*)+Version:\s+([0-9]|\.)*(?=\s|$)" "$PROJECT_ROOT/$PLUGIN/$PLUGIN.php"
-#ZIP_FILE="$PLUGIN_BUILDS_PATH/$PLUGIN-$VERSION.zip"
+echo "ℹ︎ PLUGIN_SLUG is $PLUGIN_SLUG"
+echo "ℹ︎ PLUGIN_VERSION is $PLUGIN_VERSION"
 
-# Ensure the zip file for the current version has been built
-#if [ ! -f "$ZIP_FILE" ]; then
-#    echo "Built zip file $ZIP_FILE does not exist" 1>&2
-#    exit 1
-#fi
+SVN_URL="https://plugins.svn.wordpress.org/${PLUGIN_SLUG}/"
+SVN_DIR="/tmp/svn-${PLUGIN_SLUG}"
+TMP_DIR="/tmp/git-archive"
 
-# Check if the tag exists for the version we are building
-TAG=$(svn ls "https://plugins.svn.wordpress.org/$PLUGIN/tags/$VERSION")
-error=$?
-if [ $error == 0 ]; then
-    # Tag exists, don't deploy
-    echo "Tag already exists for version $VERSION, aborting deployment"
-    exit 1
+# Checkout just trunk for efficiency
+# Tagging will be handled on the SVN level
+echo "➤ Checking out .org repository..."
+svn checkout --depth immediates "$SVN_URL" "$SVN_DIR"
+cd "$SVN_DIR"
+svn update --set-depth infinity trunk
+
+echo "➤ Copying files..."
+cd "$CI_BUILDS_DIR"
+
+git config --global user.email "git-contrib+ci@ethitter.com"
+git config --global user.name "Erick Hitter (GitLab CI)"
+
+# If there's no .gitattributes file, write a default one into place
+if [[ ! -e "$CI_BUILDS_DIR/.gitattributes" ]]; then
+	cat > "$CI_BUILDS_DIR/.gitattributes" <<-EOL
+	/.gitattributes export-ignore
+	/.gitignore export-ignore
+	/.github export-ignore
+	EOL
+
+	# Ensure we are in the $CI_BUILDS_DIR directory, just in case
+	# The .gitattributes file has to be committed to be used
+	# Just don't push it to the origin repo :)
+	git add .gitattributes && git commit -m "Add .gitattributes file"
 fi
 
-cd "$PLUGIN_BUILDS_PATH"
-# Remove any unzipped dir so we start from scratch
-rm -fR "$PLUGIN"
-# Unzip the built plugin
-#unzip -q -o "$ZIP_FILE"
+# This will exclude everything in the .gitattributes file with the export-ignore flag
+git archive HEAD | tar x --directory="$TMP_DIR"
 
-# Clean up any previous svn dir
-rm -fR svn
+cd "$SVN_DIR"
 
-# Checkout the SVN repo
-svn co -q "http://svn.wp-plugins.org/$PLUGIN" svn
+# Copy from clean copy to /trunk
+# The --delete flag will delete anything in destination that no longer exists in source
+rsync -r "$TMP_DIR/" trunk/ --delete
 
-# Move out the trunk directory to a temp location
-mv svn/trunk ./svn-trunk
-# Create trunk directory
-mkdir svn/trunk
-# Copy our new version of the plugin into trunk
-rsync -r -p $PLUGIN/* svn/trunk
+# Add everything and commit to SVN
+# The force flag ensures we recurse into subdirectories even if they are already added
+# Suppress stdout in favor of svn status later for readability
+echo "➤ Preparing files..."
+svn add . --force > /dev/null
 
-# Copy all the .svn folders from the checked out copy of trunk to the new trunk.
-# This is necessary as the Travis container runs Subversion 1.6 which has .svn dirs in every sub dir
-cd svn/trunk/
-TARGET=$(pwd)
-cd ../../svn-trunk/
+# SVN delete all deleted files
+# Also suppress stdout here
+svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm % > /dev/null
 
-# Find all .svn dirs in sub dirs
-SVN_DIRS=`find . -type d -iname .svn`
+# Copy tag locally to make this a single commit
+echo "➤ Copying tag..."
+svn cp "trunk" "tags/$PLUGIN_VERSION"
 
-for SVN_DIR in $SVN_DIRS; do
-    SOURCE_DIR=${SVN_DIR/.}
-    TARGET_DIR=$TARGET${SOURCE_DIR/.svn}
-    TARGET_SVN_DIR=$TARGET${SVN_DIR/.}
-    if [ -d "$TARGET_DIR" ]; then
-        # Copy the .svn directory to trunk dir
-        cp -r $SVN_DIR $TARGET_SVN_DIR
-    fi
-done
+svn status
 
-# Back to builds dir
-cd ../
+echo "➤ Committing files..."
+svn commit -m "Update to version $PLUGIN_VERSION from GitLab ($CI_PROJECT_URL)" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
 
-# Remove checked out dir
-rm -fR svn-trunk
-
-# Add new version tag
-#mkdir svn/tags/$VERSION
-#rsync -r -p $PLUGIN/* svn/tags/$VERSION
-
-# Add new files to SVN
-svn stat svn | grep '^?' | awk '{print $2}' | xargs -I x svn add x@
-# Remove deleted files from SVN
-svn stat svn | grep '^!' | awk '{print $2}' | xargs -I x svn rm --force x@
-svn stat svn
-
-# Commit to SVN
-#svn ci --no-auth-cache --username $WP_ORG_USERNAME --password $WP_ORG_PASSWORD svn -m "Deploy version $VERSION"
-
-# Remove SVN temp dir
-rm -fR svn
+echo "✓ Plugin deployed!"
