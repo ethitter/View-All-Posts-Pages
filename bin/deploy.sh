@@ -72,21 +72,21 @@ svn checkout --depth immediates "$SVN_URL" "$SVN_DIR"
 cd "$SVN_DIR"
 svn update --set-depth infinity trunk
 
+# Ensure we are in the $CI_PROJECT_DIR directory, just in case
 echo "➤ Copying files..."
-cd "$CI_BUILDS_DIR"
+cd "$CI_PROJECT_DIR"
 
 git config --global user.email "git-contrib+ci@ethitter.com"
 git config --global user.name "Erick Hitter (GitLab CI)"
 
 # If there's no .gitattributes file, write a default one into place
-if [[ ! -e "$CI_BUILDS_DIR/.gitattributes" ]]; then
-	cat > "$CI_BUILDS_DIR/.gitattributes" <<-EOL
+if [[ ! -e "$CI_PROJECT_DIR/.gitattributes" ]]; then
+	cat > "$CI_PROJECT_DIR/.gitattributes" <<-EOL
 	/.gitattributes export-ignore
 	/.gitignore export-ignore
 	/.github export-ignore
 	EOL
 
-	# Ensure we are in the $CI_BUILDS_DIR directory, just in case
 	# The .gitattributes file has to be committed to be used
 	# Just don't push it to the origin repo :)
 	git add .gitattributes && git commit -m "Add .gitattributes file"
