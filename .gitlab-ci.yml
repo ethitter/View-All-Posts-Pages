@@ -49,7 +49,7 @@ PluginSVN:
   stage: deploy
   image: containers.ethitter.com:443/docker/images/php:7.3
   before_script:
-    - date
+    - apt-get install -y rsync
   script: ./bin/deploy.sh
   when: on_success
 #  only:
