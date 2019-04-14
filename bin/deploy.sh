@@ -125,6 +125,6 @@ if [[ -z "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" || "$CI_MERGE_REQUEST_TARGET_BRA
 fi
 
 echo "➤ Committing files..."
-svn commit -m "Update to version $PLUGIN_VERSION from GitLab ($CI_PROJECT_URL)" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+svn commit -m "Update to version ${PLUGIN_VERSION} from GitLab (${CI_PROJECT_URL}; ${CI_JOB_URL})" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
 
 echo "✓ Plugin deployed!"
