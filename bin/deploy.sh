@@ -39,7 +39,7 @@ if [[ -z "$CI" ]]; then
 fi
 
 if [[ -z "$WP_ORG_USERNAME" ]]; then
-	echo "WordPress.org password not set" 1>&2
+	echo "WordPress.org username not set" 1>&2
 	exit 1
 fi
 
@@ -120,7 +120,7 @@ svn status
 
 # Stop here unless this is a merge into master.
 if [[ -z "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" || "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" != "master" ]]; then
-	echo "ℹ︎ EXITING before commit step as this is the '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}' branch, not the 'master' branch." 1>&2
+	echo "𝘅︎ EXITING before commit step as this is the '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}' branch, not the 'master' branch." 1>&2
 	exit 0
 fi
 
