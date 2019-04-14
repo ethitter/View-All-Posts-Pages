@@ -26,6 +26,7 @@ before_script:
   - phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/automattic/vipwpcs,$HOME/.composer/vendor/phpcompatibility/php-compatibility,$HOME/.composer/vendor/phpcompatibility/phpcompatibility-paragonie,$HOME/.composer/vendor/phpcompatibility/phpcompatibility-wp
 
 PHPunit:PHP7.2:MySQL:
+  stage: test
   image: containers.ethitter.com:443/docker/images/php:7.2
   services:
     - mysql:5.6
@@ -35,6 +36,7 @@ PHPunit:PHP7.2:MySQL:
     - phpunit
 
 PHPunit:PHP7.3:MySQL:
+  stage: test
   image: containers.ethitter.com:443/docker/images/php:7.3
   services:
     - mysql:5.6
@@ -42,3 +44,14 @@ PHPunit:PHP7.3:MySQL:
     - find . -type "f" -iname "*.php" | xargs -L "1" php -l
     - phpcs -n
     - phpunit
+
+PluginSVN:
+  stage: deploy
+  image: containers.ethitter.com:443/docker/images/php:7.3
+  before_script:
+    - apt-get update
+    - apt-get install -y rsync
+  script: ./bin/deploy.sh
+  when: on_success
+#  only:
+#    - master
