@@ -119,12 +119,12 @@ svn cp "trunk" "tags/$PLUGIN_VERSION"
 svn status
 
 # Stop here unless this is a merge into master.
-if [[ -z "$CI_COMMIT_REF_NAME" || "$CI_COMMIT_REF_NAME" != "master" ]]; then
-	echo "𝘅︎ EXITING before commit step as this is the '${CI_COMMIT_REF_NAME}' branch, not the 'master' branch." 1>&2
+if [[ -z "$CI_COMMIT_REF_NAME" || -z "$WP_ORG_RELEASE_TAG" || "$CI_COMMIT_REF_NAME" != "$WP_ORG_RELEASE_TAG" ]]; then
+	echo "𝘅︎ EXITING before commit step as this is the '${CI_COMMIT_REF_NAME}' ref, not the '${WP_ORG_RELEASE_TAG}' ref." 1>&2
 	exit 0
 fi
 
 echo "➤ Committing files..."
-svn commit -m "Update to version ${PLUGIN_VERSION} from GitLab (${CI_PROJECT_URL}; ${CI_JOB_URL})" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+svn commit -m "Update to version ${PLUGIN_VERSION} from GitLab (${CI_PROJECT_URL}; ${CI_JOB_URL})" --no-auth-cache --non-interactive  --username "$WP_ORG_USERNAME" --password "$WP_ORG_PASSWORD"
 
 echo "✓ Plugin deployed!"
