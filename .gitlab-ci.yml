@@ -51,7 +51,7 @@ PluginSVN:
   before_script:
     - apt-get update
     - apt-get install -y rsync
+    - curl -o ./bin/deploy.sh https://git-cdn.e15r.co/open-source/wp-org-plugin-deploy/raw/master/scripts/deploy.sh
+    - chmod +x ./bin/deploy.sh
   script: ./bin/deploy.sh
   when: on_success
-#  only:
-#    - master
