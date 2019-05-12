@@ -3,15 +3,13 @@ Contributors: ethitter, thinkoomph
 Donate link: http://www.thinkoomph.com/plugins-modules/view-all-posts-pages/
 Tags: view all, pages, paged, paged post, multipage, single view, single page, wp_link_pages, nextpage, next page, quicktag
 Requires at least: 3.2.1
-Tested up to: 5.1
-Stable tag: 0.9.2
+Tested up to: 5.2
+Stable tag: 0.9.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Provides a "view all" (single page) option for content paged using WordPress' &lt;!--nextpage--&gt; Quicktag (multipage posts).
 == Description ==
-
-**This plugin is not yet compatible with WordPress 5.2.**
 
 Provides a "view all" (single page) option for posts, pages, and custom post types paged using WordPress' <a href="http://codex.wordpress.org/Write_Post_SubPanel#Quicktags" target="_blank"><code>&lt;!--nextpage--&gt;</code> Quicktag</a> (multipage posts).
 
@@ -26,10 +24,6 @@ Your theme must use `wp_link_pages()` to generate post page links, or you must u
 3. Navigate to Options > Permalinks and click *Save Changes* to update navigation.
 
 == Frequently Asked Questions ==
-
-= I upgraded to WordPress 5.2 and this plugin stopped working. =
-
-WordPress 5.2 updated the function that's used to retrieve post content, defeating this plugin's method of creating the view-all output. Progress towards a 5.2-compatible approach will be tracked at [https://git.ethitter.com/wp-plugins/view-all-posts-pages/issues/1](https://git.ethitter.com/wp-plugins/view-all-posts-pages/issues/1).
 
 = Links don't work =
 First, navigate to Options > Permalinks in WP Admin, click *Save Changes*, and try again.
@@ -50,6 +44,9 @@ This plugin is known to conflict with certain plugins, many pertaining to SEO an
 * **WordPress SEO by Yoast:** This plugin's `Permalink` options, particularly *Redirect attachment URL's to parent post URL* and *Redirect ugly URL's to clean permalinks. (Not recommended in many cases!)*, interfere with View All Post's Pages' ability to display full content. Both must be disabled, and the site's rewrite rules regenerated (by visiting Options > Permalinks and clicking *Save Changes*), for View All Post's Pages to function.
 
 == Changelog ==
+
+= 0.9.3 =
+* Compatible with WordPress 5.2
 
 = 0.9.2 =
 * Compatible with PHP 7.3
@@ -105,6 +102,9 @@ This plugin is known to conflict with certain plugins, many pertaining to SEO an
 * Initial release
 
 == Upgrade Notice ==
+
+= 0.9.3 =
+Ensures compatibility with WordPress 5.2.
 
 = 0.9.2 =
 Adds support for PHP 7.3 and fixes various PHPCS errors, neither of which should impact the plugin's functionality.

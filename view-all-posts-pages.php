@@ -9,7 +9,7 @@
  * Author URI:      http://www.oomphinc.com/
  * Text Domain:     view_all_posts_pages
  * Domain Path:     /languages
- * Version:         0.9.2
+ * Version:         0.9.3
  *
  * @package         View_All_Posts_Pages
  *
@@ -762,7 +762,6 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 		endif;
 	}
 }
-view_all_posts_pages::get_instance();
 
 /**
  * Alias global variable used to hold instantiated plugin prior to singleton's introduction in version 0.7.
