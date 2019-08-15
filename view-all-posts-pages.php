@@ -270,10 +270,12 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 			$post->post_content = str_replace( "<!--nextpage-->\n", "\n", $post->post_content );
 			$post->post_content = str_replace( '<!--nextpage-->', ' ', $post->post_content );
 
-			$pages = array( $post->post_content ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
+			// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+			$pages = array( $post->post_content );
 
-			$more      = 1; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
-			$multipage = 0; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
+			$more      = 1;
+			$multipage = 0;
+			// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 	}
 
