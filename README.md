@@ -3,8 +3,8 @@
 **Donate link:** http://www.thinkoomph.com/plugins-modules/view-all-posts-pages/  
 **Tags:** view all, pages, paged, paged post, multipage, single view, single page, wp_link_pages, nextpage, next page, quicktag  
 **Requires at least:** 3.2.1  
-**Tested up to:** 5.0  
-**Stable tag:** 0.9.1  
+**Tested up to:** 5.3  
+**Stable tag:** 0.9.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -45,7 +45,11 @@ This plugin is known to conflict with certain plugins, many pertaining to SEO an
 
 ## Changelog ##
 
+### 0.9.3 ###
+* Compatible with WordPress 5.2
+
 ### 0.9.2 ###
+* Compatible with PHP 7.3
 * Introduce PHPCS tests
 * Update plugin based on PHPCS results
 
@@ -61,7 +65,7 @@ This plugin is known to conflict with certain plugins, many pertaining to SEO an
 ### 0.8 ###
 * When WordPress determines a request is a 404, don't activate the plugin's functionality.
 * Convert the plugin to a singleton.
-* Audit entire plugin for translation readyness.
+* Audit entire plugin for translation readiness.
 * Correct phpdoc.
 
 ### 0.7 ###
@@ -98,6 +102,9 @@ This plugin is known to conflict with certain plugins, many pertaining to SEO an
 * Initial release
 
 ## Upgrade Notice ##
+
+### 0.9.3 ###
+Ensures compatibility with WordPress 5.2.
 
 ### 0.9.2 ###
 Adds support for PHP 7.3 and fixes various PHPCS errors, neither of which should impact the plugin's functionality.

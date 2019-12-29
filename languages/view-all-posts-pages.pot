@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the View All Posts Pages package.
 msgid ""
 msgstr ""
-"Project-Id-Version: View All Posts Pages 0.9.2\n"
+"Project-Id-Version: View All Posts Pages 0.9.3\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/view-all-posts-pages\n"
-"POT-Creation-Date: 2019-02-05 18:43:53+00:00\n"
+"POT-Creation-Date: 2019-11-23 22:03:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,99 +29,99 @@ msgstr ""
 msgid "View All"
 msgstr ""
 
-#: view-all-posts-pages.php:464 view-all-posts-pages.php:495
+#: view-all-posts-pages.php:467 view-all-posts-pages.php:498
 #. translators: 1: Plugin name.
 #. translators: 1: WordPress function name.
 msgid "%s Options"
 msgstr ""
 
-#: view-all-posts-pages.php:499
+#: view-all-posts-pages.php:502
 msgid ""
 "A \"view all\" link can be appended to WordPress' standard page navigation "
 "using the options below."
 msgstr ""
 
-#: view-all-posts-pages.php:503
+#: view-all-posts-pages.php:506
 msgid "Automatically append link to post's page navigation?"
 msgstr ""
 
-#: view-all-posts-pages.php:505 view-all-posts-pages.php:548
+#: view-all-posts-pages.php:508 view-all-posts-pages.php:551
 msgid "Yes"
 msgstr ""
 
-#: view-all-posts-pages.php:506 view-all-posts-pages.php:549
+#: view-all-posts-pages.php:509 view-all-posts-pages.php:552
 msgid "No"
 msgstr ""
 
-#: view-all-posts-pages.php:510 view-all-posts-pages.php:576
+#: view-all-posts-pages.php:513 view-all-posts-pages.php:579
 msgid "Link text:"
 msgstr ""
 
-#: view-all-posts-pages.php:516 view-all-posts-pages.php:582
+#: view-all-posts-pages.php:519 view-all-posts-pages.php:585
 msgid "Link's CSS class(es):"
 msgstr ""
 
-#: view-all-posts-pages.php:520 view-all-posts-pages.php:586
+#: view-all-posts-pages.php:523 view-all-posts-pages.php:589
 msgid ""
 "Be aware that Internet Explorer will only interpret the first two CSS "
 "classes."
 msgstr ""
 
-#: view-all-posts-pages.php:524 view-all-posts-pages.php:561
+#: view-all-posts-pages.php:527 view-all-posts-pages.php:564
 msgid "Display automatically on:"
 msgstr ""
 
-#: view-all-posts-pages.php:540
+#: view-all-posts-pages.php:543
 msgid "Standalone Link Options"
 msgstr ""
 
-#: view-all-posts-pages.php:542
+#: view-all-posts-pages.php:545
 msgid ""
 "In addition to appending the \"view all\" link to WordPress' standard "
 "navigation, link(s) can be added above and below post content."
 msgstr ""
 
-#: view-all-posts-pages.php:546
+#: view-all-posts-pages.php:549
 msgid "Automatically add links based on settings below?"
 msgstr ""
 
-#: view-all-posts-pages.php:553
+#: view-all-posts-pages.php:556
 msgid "Automatically place link:"
 msgstr ""
 
-#: view-all-posts-pages.php:555
+#: view-all-posts-pages.php:558
 msgid "Above content"
 msgstr ""
 
-#: view-all-posts-pages.php:556
+#: view-all-posts-pages.php:559
 msgid "Below content"
 msgstr ""
 
-#: view-all-posts-pages.php:557
+#: view-all-posts-pages.php:560
 msgid "Above and below content"
 msgstr ""
 
-#: view-all-posts-pages.php:590
+#: view-all-posts-pages.php:593
 msgid "Link's priority:"
 msgstr ""
 
-#: view-all-posts-pages.php:594
+#: view-all-posts-pages.php:597
 msgid ""
 "Priority determines when the link is added to a post's content. You can use "
 "the above setting to modulate the link's placement."
 msgstr ""
 
-#: view-all-posts-pages.php:595
+#: view-all-posts-pages.php:598
 msgid ""
 "The default value is <strong>10</strong>. Lower values mean the link will "
 "be added earlier, while higher values will add the link later."
 msgstr ""
 
-#: view-all-posts-pages.php:739
+#: view-all-posts-pages.php:742
 msgid "View All Post's Pages"
 msgstr ""
 
-#: view-all-posts-pages.php:744
+#: view-all-posts-pages.php:747
 #. translators: 1: Permalinks settings page URL.
 msgid ""
 "You must refresh your site's permalinks before <em>View All Post's "
@@ -130,7 +130,7 @@ msgid ""
 "Changes</em></strong> button at the bottom of the screen."
 msgstr ""
 
-#: view-all-posts-pages.php:756
+#: view-all-posts-pages.php:759
 #. translators: 1: URL to dismiss admin notice.
 msgid "When finished, click <a href=\"%s\">here</a> to hide this message."
 msgstr ""

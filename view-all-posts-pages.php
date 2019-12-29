@@ -9,7 +9,7 @@
  * Author URI:      http://www.oomphinc.com/
  * Text Domain:     view_all_posts_pages
  * Domain Path:     /languages
- * Version:         0.9.2
+ * Version:         0.9.3
  *
  * @package         View_All_Posts_Pages
  *
@@ -270,10 +270,12 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 			$post->post_content = str_replace( "<!--nextpage-->\n", "\n", $post->post_content );
 			$post->post_content = str_replace( '<!--nextpage-->', ' ', $post->post_content );
 
-			$pages = array( $post->post_content ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
+			// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
+			$pages = array( $post->post_content );
 
-			$more      = 1; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
-			$multipage = 0; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
+			$more      = 1;
+			$multipage = 0;
+			// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 	}
 
@@ -320,7 +322,8 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 
 			// Set global $more to false so that wp_link_pages outputs links for all pages when viewing full post page.
 			if ( $this->is_view_all() ) {
-				$GLOBALS['more'] = false; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
+				// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+				$GLOBALS['more'] = false;
 			}
 
 			// Process link text, respecting pagelink parameter.
@@ -754,7 +757,7 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 
 					/* translators: 1: URL to dismiss admin notice. */
 					printf( wp_kses_post( __( 'When finished, click <a href="%s">here</a> to hide this message.', 'view_all_posts_pages' ) ), esc_url( admin_url( add_query_arg( $query_args, 'index.php' ) ) ) );
-				?>
+					?>
 			</p>
 		</div>
 
@@ -762,7 +765,6 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 		endif;
 	}
 }
-view_all_posts_pages::get_instance();
 
 /**
  * Alias global variable used to hold instantiated plugin prior to singleton's introduction in version 0.7.
