@@ -37,7 +37,7 @@ class PostFilters extends WP_UnitTestCase {
 	/**
 	 * Prepare data for tests.
 	 */
-	public function setUp(): void {
+	public function setUp() {
 		parent::setUp();
 
 		static::$post_id = $this->factory->post->create(
@@ -53,7 +53,7 @@ class PostFilters extends WP_UnitTestCase {
 	/**
 	 * Test retrieving page 1 content.
 	 */
-	public function test_view_page_1(): void {
+	public function test_view_page_1() {
 		query_posts(
 			array(
 				'p' => static::$post_id,
@@ -72,7 +72,7 @@ class PostFilters extends WP_UnitTestCase {
 	/**
 	 * Test retrieving page 2 content.
 	 */
-	public function test_view_page_2(): void {
+	public function test_view_page_2() {
 		query_posts(
 			array(
 				'p'    => static::$post_id,
@@ -92,7 +92,7 @@ class PostFilters extends WP_UnitTestCase {
 	/**
 	 * Test retrieving page 3 content.
 	 */
-	public function test_view_page_3(): void {
+	public function test_view_page_3() {
 		query_posts(
 			array(
 				'p'    => static::$post_id,
@@ -112,7 +112,7 @@ class PostFilters extends WP_UnitTestCase {
 	/**
 	 * Test retrieving "view all" contents.
 	 */
-	public function test_view_all(): void {
+	public function test_view_all() {
 		query_posts(
 			array(
 				'p'        => static::$post_id,
