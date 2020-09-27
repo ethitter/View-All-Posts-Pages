@@ -41,12 +41,12 @@ class PostFilters extends WP_UnitTestCase {
 		parent::setUp();
 
 		static::$post_id = $this->factory->post->create(
-			[
+			array(
 				'post_title'   => 'Pagination Test',
 				'post_status'  => 'publish',
 				'post_date'    => '2019-01-01 00:01:01',
 				'post_content' => implode( static::$page_break, static::$pages_content ),
-			]
+			)
 		);
 	}
 
@@ -55,9 +55,9 @@ class PostFilters extends WP_UnitTestCase {
 	 */
 	public function test_view_page_1(): void {
 		query_posts(
-			[
+			array(
 				'p' => static::$post_id,
-			]
+			)
 		);
 
 		$this->assertTrue( have_posts() );
@@ -74,10 +74,10 @@ class PostFilters extends WP_UnitTestCase {
 	 */
 	public function test_view_page_2(): void {
 		query_posts(
-			[
+			array(
 				'p'    => static::$post_id,
 				'page' => 2,
-			]
+			)
 		);
 
 		$this->assertTrue( have_posts() );
@@ -94,10 +94,10 @@ class PostFilters extends WP_UnitTestCase {
 	 */
 	public function test_view_page_3(): void {
 		query_posts(
-			[
+			array(
 				'p'    => static::$post_id,
 				'page' => 3,
-			]
+			)
 		);
 
 		$this->assertTrue( have_posts() );
@@ -114,10 +114,10 @@ class PostFilters extends WP_UnitTestCase {
 	 */
 	public function test_view_all(): void {
 		query_posts(
-			[
+			array(
 				'p'        => static::$post_id,
 				'view-all' => true,
-			]
+			)
 		);
 
 		$this->assertTrue( have_posts() );
