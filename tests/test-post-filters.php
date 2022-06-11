@@ -5,10 +5,12 @@
  * @package View_All_Posts_Pages
  */
 
+use View_All_Posts_Pages\Tests\TestCase;
+
 /**
  * Content-filter test case.
  */
-class PostFilters extends WP_UnitTestCase {
+class PostFilters extends TestCase {
 	/**
 	 * Text for each page of multipage post.
 	 *
@@ -40,7 +42,7 @@ class PostFilters extends WP_UnitTestCase {
 	 * Not using `setUp` because Yoast polyfills add a return type for PHP 8
 	 * that isn't supported before PHP 7.1.
 	 */
-	protected function _create_post() {
+	protected function _do_set_up() {
 		static::$post_id = $this->factory->post->create(
 			array(
 				'post_title'   => 'Pagination Test',
@@ -55,8 +57,6 @@ class PostFilters extends WP_UnitTestCase {
 	 * Test retrieving page 1 content.
 	 */
 	public function test_view_page_1() {
-		$this->_create_post();
-
 		query_posts(
 			array(
 				'p' => static::$post_id,
@@ -76,8 +76,6 @@ class PostFilters extends WP_UnitTestCase {
 	 * Test retrieving page 2 content.
 	 */
 	public function test_view_page_2() {
-		$this->_create_post();
-
 		query_posts(
 			array(
 				'p'    => static::$post_id,
@@ -98,8 +96,6 @@ class PostFilters extends WP_UnitTestCase {
 	 * Test retrieving page 3 content.
 	 */
 	public function test_view_page_3() {
-		$this->_create_post();
-
 		query_posts(
 			array(
 				'p'    => static::$post_id,
@@ -120,8 +116,6 @@ class PostFilters extends WP_UnitTestCase {
 	 * Test retrieving "view all" contents.
 	 */
 	public function test_view_all() {
-		$this->_create_post();
-
 		query_posts(
 			array(
 				'p'        => static::$post_id,
@@ -137,7 +131,7 @@ class PostFilters extends WP_UnitTestCase {
 			$content = get_the_content();
 
 			foreach ( static::$pages_content as $page => $text ) {
-				$this->assertContains( $text, $content, "Failed to assert that content contained page {$page}." );
+				$this->assertStringContainsString( $text, $content, "Failed to assert that content contained page {$page}." );
 			}
 		}
 	}
