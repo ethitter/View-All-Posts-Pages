@@ -27,8 +27,5 @@ function _manually_load_plugin() {
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
-// Load base class for compatibility.
-require __DIR__ . '/class-test-case.php';
-
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';

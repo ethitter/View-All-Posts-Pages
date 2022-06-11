@@ -5,12 +5,10 @@
  * @package View_All_Posts_Pages
  */
 
-use View_All_Posts_Pages\Tests\TestCase;
-
 /**
  * Content-filter test case.
  */
-class PostFilters extends TestCase {
+class PostFilters extends WP_UnitTestCase {
 	/**
 	 * Text for each page of multipage post.
 	 *
@@ -42,7 +40,7 @@ class PostFilters extends TestCase {
 	 * Not using `setUp` because Yoast polyfills add a return type for PHP 8
 	 * that isn't supported before PHP 7.1.
 	 */
-	protected function _do_set_up() {
+	protected function set_up() {
 		static::$post_id = $this->factory->post->create(
 			array(
 				'post_title'   => 'Pagination Test',
