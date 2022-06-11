@@ -1,9 +1,9 @@
 # View All Post's Pages #
-**Contributors:** ethitter, thinkoomph  
+**Contributors:** [ethitter](https://profiles.wordpress.org/ethitter/), [thinkoomph](https://profiles.wordpress.org/thinkoomph/)  
 **Donate link:** http://www.thinkoomph.com/plugins-modules/view-all-posts-pages/  
 **Tags:** view all, pages, paged, paged post, multipage, single view, single page, wp_link_pages, nextpage, next page, quicktag  
 **Requires at least:** 3.2.1  
-**Tested up to:** 5.9  
+**Tested up to:** 6.0  
 **Stable tag:** 0.9.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
