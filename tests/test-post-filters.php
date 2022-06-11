@@ -37,7 +37,7 @@ class PostFilters extends WP_UnitTestCase {
 	/**
 	 * Prepare data for tests.
 	 */
-	public function setUp() {
+	protected function setUp() {
 		parent::setUp();
 
 		static::$post_id = $this->factory->post->create(
