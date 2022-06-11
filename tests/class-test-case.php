@@ -8,6 +8,8 @@
 
 namespace View_All_Posts_Pages\Tests;
 
+use WP_UnitTestCase;
+
 if ( version_compare( phpversion(), '8.0.0', '<' ) ) {
 	/**
 	 * Class TestCase.
