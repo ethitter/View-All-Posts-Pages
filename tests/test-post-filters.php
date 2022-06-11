@@ -36,10 +36,11 @@ class PostFilters extends WP_UnitTestCase {
 
 	/**
 	 * Prepare data for tests.
+	 *
+	 * Not using `setUp` because Yoast polyfills add a return type for PHP 8
+	 * that isn't supported before PHP 7.1.
 	 */
-	protected function setUp() {
-		parent::setUp();
-
+	protected function _create_post() {
 		static::$post_id = $this->factory->post->create(
 			array(
 				'post_title'   => 'Pagination Test',
@@ -54,6 +55,8 @@ class PostFilters extends WP_UnitTestCase {
 	 * Test retrieving page 1 content.
 	 */
 	public function test_view_page_1() {
+		$this->_create_post();
+
 		query_posts(
 			array(
 				'p' => static::$post_id,
@@ -73,6 +76,8 @@ class PostFilters extends WP_UnitTestCase {
 	 * Test retrieving page 2 content.
 	 */
 	public function test_view_page_2() {
+		$this->_create_post();
+
 		query_posts(
 			array(
 				'p'    => static::$post_id,
@@ -93,6 +98,8 @@ class PostFilters extends WP_UnitTestCase {
 	 * Test retrieving page 3 content.
 	 */
 	public function test_view_page_3() {
+		$this->_create_post();
+
 		query_posts(
 			array(
 				'p'    => static::$post_id,
@@ -113,6 +120,8 @@ class PostFilters extends WP_UnitTestCase {
 	 * Test retrieving "view all" contents.
 	 */
 	public function test_view_all() {
+		$this->_create_post();
+
 		query_posts(
 			array(
 				'p'        => static::$post_id,
