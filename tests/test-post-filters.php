@@ -37,8 +37,8 @@ class PostFilters extends WP_UnitTestCase {
 	/**
 	 * Prepare data for tests.
 	 */
-	public function setUp() {
-		parent::setUp();
+	public function set_up() {
+		parent::set_up();
 
 		static::$post_id = $this->factory->post->create(
 			array(
@@ -128,7 +128,7 @@ class PostFilters extends WP_UnitTestCase {
 			$content = get_the_content();
 
 			foreach ( static::$pages_content as $page => $text ) {
-				$this->assertContains( $text, $content, "Failed to assert that content contained page {$page}." );
+				$this->assertStringContainsString( $text, $content, "Failed to assert that content contained page {$page}." );
 			}
 		}
 	}
