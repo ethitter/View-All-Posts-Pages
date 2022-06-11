@@ -36,11 +36,10 @@ class PostFilters extends WP_UnitTestCase {
 
 	/**
 	 * Prepare data for tests.
-	 *
-	 * Not using `setUp` because Yoast polyfills add a return type for PHP 8
-	 * that isn't supported before PHP 7.1.
 	 */
-	protected function set_up() {
+	public function set_up() {
+		parent::set_up();
+
 		static::$post_id = $this->factory->post->create(
 			array(
 				'post_title'   => 'Pagination Test',
