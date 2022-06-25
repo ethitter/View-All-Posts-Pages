@@ -9,7 +9,7 @@ module.exports = function( grunt ) {
 
 		addtextdomain: {
 			options: {
-				textdomain: 'view_all_posts_pages',
+				textdomain: 'view-all-posts-pages',
 			},
 			update_all_domains: {
 				options: {
