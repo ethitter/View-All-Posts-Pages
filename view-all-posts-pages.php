@@ -339,8 +339,9 @@ class view_all_posts_pages { // phpcs:ignore PEAR.NamingConventions.ValidClassNa
 
 			// Set global $more to false so that wp_link_pages outputs links for all pages when viewing full post page.
 			if ( $this->is_view_all() ) {
-				// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+				// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 				$GLOBALS['more'] = false;
+				// phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
 			}
 
 			// Process link text, respecting pagelink parameter.
