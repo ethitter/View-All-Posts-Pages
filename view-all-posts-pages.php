@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
+<?php // phpcs:ignore Universal.Files.SeparateFunctionsFromOO.Mixed,WordPress.Files.FileName.InvalidClassFileName
 /**
  * View All Posts Pages
  *
