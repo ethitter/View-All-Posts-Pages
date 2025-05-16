@@ -1,4 +1,4 @@
-<?php // phpcs:ignore Universal.Files.SeparateFunctionsFromOO.Mixed,WordPress.Files.FileName.InvalidClassFileName
+<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
 /**
  * View All Posts Pages
  *
@@ -12,6 +12,8 @@
  * Version:         0.9.4
  *
  * @package         View_All_Posts_Pages
+ *
+ * phpcs:disable Universal.Files.SeparateFunctionsFromOO.Mixed
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
